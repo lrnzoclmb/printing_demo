@@ -1,7 +1,8 @@
 import "./App.css";
 import { useState } from "react";
-import { storage } from './firebase';
+import { storage, db } from './firebase';
 import { ref, uploadBytes } from "firebase/storage";
+import { ref, push } from "firebase/database";
 import { v4 } from "uuid";
 
 function App() {
