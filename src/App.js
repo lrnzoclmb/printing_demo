@@ -8,24 +8,30 @@ import { v4 } from "uuid";
 function App() {
   const [fileUpload, setFileUpload] = useState(null);
 
+  const isPDF = (file) => {
+    return file.type === "application/pdf";
+  };
+
   const uploadFile = () => {
     if (fileUpload == null) return;
+
+    
+    if (!isPDF(fileUpload)) {
+      alert("Please select a PDF file.");
+      return;
+    }
 
     const fileRef = storageRef(storage, `files/${fileUpload.name + v4()}`);
     const databaseRef = dbRef(db, 'uploadedFiles');
 
-    
     uploadBytes(fileRef, fileUpload).then(() => {
-      
       getDownloadURL(fileRef).then((downloadURL) => {
-        
         const fileData = {
           name: fileUpload.name,
           url: downloadURL,
           timestamp: Date.now(),
         };
 
-        
         push(databaseRef, fileData).then(() => {
           alert("File Uploaded");
         })
@@ -43,6 +49,7 @@ function App() {
     <div className="App">
       <input 
         type="file" 
+        accept=".pdf"  
         onChange={(event) => {
           setFileUpload(event.target.files[0]);
         }}
@@ -53,3 +60,4 @@ function App() {
 }
 
 export default App;
+
